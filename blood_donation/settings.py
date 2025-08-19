@@ -20,16 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key-for-development-only')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-# Dynamic ALLOWED_HOSTS for Render
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
-
-# Add Render hostname if available
-RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if RENDER_EXTERNAL_HOSTNAME:
-    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
-
-# Also add your main domain
-ALLOWED_HOSTS.append('blood-donation-system.onrender.com')
+# FIX: Allow ALL Render subdomains
+ALLOWED_HOSTS = [
+    '.onrender.com',  # This allows ALL subdomains of onrender.com
+    'localhost',
+    '127.0.0.1'
+]
 
 # ===== Application Definition =====
 INSTALLED_APPS = [
@@ -77,7 +73,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'blood_donation.wsgi.application'
 
 # ===== Database =====
-# Updated for psycopg v3 compatibility
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
