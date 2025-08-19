@@ -19,7 +19,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ===== Core Settings =====
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key-for-development-only')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = ['blood-donation-system.onrender.com', 'localhost', '127.0.0.1']
+
+# Dynamic ALLOWED_HOSTS for Render
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+# Add Render hostname if available
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# Also add your main domain
+ALLOWED_HOSTS.append('blood-donation-system.onrender.com')
 
 # ===== Application Definition =====
 INSTALLED_APPS = [
