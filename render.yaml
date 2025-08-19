@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: blood-donation-system  # Customize this
+    runtime: python
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+    startCommand: gunicorn blood_donation.wsgi:application
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      # Add these if using Render's PostgreSQL:
+      - key: DB_NAME
+        fromDatabase:
+          name: blood-donation-db  # Match your Render DB name
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: blood-donation-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: blood-donation-db
+          property: password
+      - key: DB_HOST
+        fromDatabase:
+          name: blood-donation-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: blood-donation-db
+          property: port

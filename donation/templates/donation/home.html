@@ -1,0 +1,76 @@
+{% extends 'donation/base.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="jumbotron bg-light p-5 rounded">
+            <h1 class="display-4">Donate Blood, Save Lives</h1>
+            <p class="lead">Your single donation can save up to 3 lives. Register today to become a blood donor.</p>
+            <hr class="my-4">
+            <p>Join our community of lifesavers and make a difference in someone's life.</p>
+            <div class="d-flex gap-2">
+                <a class="btn btn-danger btn-lg" href="{% url 'register' %}" role="button">Register Now</a>
+                <a class="btn btn-outline-danger btn-lg" href="{% url 'login' %}" role="button">Login</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Blood Stock</h5>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for stock in blood_stocks %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ stock.blood_group }}
+                        <span class="badge bg-{% if stock.units < 5 %}danger{% else %}success{% endif %} rounded-pill">
+                            {{ stock.units }} units
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if urgent_requests %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-warning">
+                <h5 class="mb-0">Urgent Blood Requests</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Patient</th>
+                                <th>Blood Group</th>
+                                <th>Units</th>
+                                <th>Hospital</th>
+                                <th>Required By</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for req in urgent_requests %}
+                            <tr>
+                                <td>{{ req.patient_name }}</td>
+                                <td>{{ req.blood_group }}</td>
+                                <td>{{ req.units }}</td>
+                                <td>{{ req.hospital }}</td>
+                                <td>{{ req.date_required }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
