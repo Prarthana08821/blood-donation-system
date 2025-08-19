@@ -23,7 +23,6 @@ from donation import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),  # Make sure this exists
     path('', include('donation.urls')),  # Or include your app URLs
 ]
 
