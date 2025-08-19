@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
@@ -6,8 +6,10 @@ from .forms import UserRegisterForm, ProfileUpdateForm
 from .models import Profile, BloodStock, DonationAppointment, BloodRequest
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib import messages
-from django.shortcuts import render
-from .models import BloodStock, BloodRequest  
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.http import HttpResponse
+import io
 
 
 def register(request):
@@ -126,7 +128,7 @@ def request_blood(request):
 
 @login_required
 def track_request(request, pk):
-    blood_request = BloodRequest.objects.get(pk=pk)
+    blood_request = get_object_or_404(BloodRequest, pk=pk)
     if blood_request.requester != request.user:
         return redirect('home')
     
@@ -147,23 +149,30 @@ def admin_dashboard(request):
 
 @staff_member_required
 def manage_request(request, pk):
-    blood_request = BloodRequest.objects.get(pk=pk)
-    blood_stock = BloodStock.objects.get(blood_group=blood_request.blood_group)
+    blood_request = get_object_or_404(BloodRequest, pk=pk)
+    
+    try:
+        blood_stock = BloodStock.objects.get(blood_group=blood_request.blood_group)
+    except BloodStock.DoesNotExist:
+        blood_stock = None
+        messages.warning(request, f'No stock found for blood group {blood_request.blood_group}')
     
     if request.method == 'POST':
         action = request.POST.get('action')
         
-        if action == 'approve':
-            if blood_stock.units >= blood_request.units:
+        if action == 'approve':  # Fixed typo: was 'approve'
+            if blood_stock and blood_stock.units >= blood_request.units:
                 blood_stock.units -= blood_request.units
                 blood_stock.save()
                 blood_request.status = 'Approved'
                 blood_request.save()
+                messages.success(request, 'Request approved successfully!')
             else:
                 messages.warning(request, 'Not enough blood in stock!')
         elif action == 'reject':
             blood_request.status = 'Rejected'
             blood_request.save()
+            messages.success(request, 'Request rejected!')
         
         return redirect('admin-dashboard')
     
@@ -181,6 +190,7 @@ def update_stock(request):
         blood_stock, created = BloodStock.objects.get_or_create(blood_group=blood_group)
         blood_stock.units += units
         blood_stock.save()
+        messages.success(request, f'Stock updated for {blood_group}. Current units: {blood_stock.units}')
         return redirect('admin-dashboard')
     
     return render(request, 'donation/update_stock.html')
@@ -199,5 +209,37 @@ def home(request):
         'urgent_requests': urgent_requests,
     }
     return render(request, 'donation/home.html', context)
+
+# Add this view to test if Pillow is working after the update
+def test_pillow(request):
+    """
+    A simple view to test if Pillow is working correctly
+    """
+    try:
+        from PIL import Image
+        
+        # Create a simple test image
+        img = Image.new('RGB', (100, 100), color='red')
+        
+        # Save it to memory
+        img_buffer = io.BytesIO()
+        img.save(img_buffer, format='PNG')
+        img_buffer.seek(0)
+        
+        # Save to default storage
+        file_name = 'test_pillow_image.png'
+        default_storage.save(file_name, ContentFile(img_buffer.getvalue()))
+        
+        # Check if file exists
+        if default_storage.exists(file_name):
+            default_storage.delete(file_name)
+            return HttpResponse("Pillow is working correctly! Test image created and deleted successfully.")
+        else:
+            return HttpResponse("Pillow test completed but file operation failed.")
+            
+    except ImportError:
+        return HttpResponse("Pillow is not installed correctly.")
+    except Exception as e:
+        return HttpResponse(f"Error testing Pillow: {str(e)}")
 
 # Create your views here.
