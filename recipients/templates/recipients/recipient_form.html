@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-body p-4">
+
+                    <!-- Icon -->
+                    <div class="d-flex justify-content-center mb-3">
+                        <img src="https://cdn-icons-png.flaticon.com/512/2966/2966327.png" 
+                             alt="Recipient Icon" width="60" height="60">
+                    </div>
+
+                    <!-- Title -->
+                    <h2 class="text-center text-danger fw-bold">Recipient Registration</h2>
+                    <p class="text-center text-muted mb-4">
+                        Fill out the form to request and receive life-saving blood
+                    </p>
+
+                    <!-- Show form errors -->
+                    {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <strong>Please correct the following errors:</strong>
+                            <ul>
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field|title }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" name="name" class="form-control" id="name"
+                                   value="{{ form.name.value|default:'' }}" required>
+                        </div>
+
+                        <!-- Age -->
+                        <div class="mb-3">
+                            <label for="age" class="form-label">Age</label>
+                            <input type="number" name="age" class="form-control" id="age"
+                                   value="{{ form.age.value|default:'' }}" required>
+                        </div>
+
+                        <!-- Gender -->
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select name="gender" id="gender" class="form-select" required>
+                                <option value="">Select Gender</option>
+                                <option value="Male" {% if form.gender.value == "Male" %}selected{% endif %}>Male</option>
+                                <option value="Female" {% if form.gender.value == "Female" %}selected{% endif %}>Female</option>
+                                <option value="Other" {% if form.gender.value == "Other" %}selected{% endif %}>Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Blood Group -->
+                        <div class="mb-3">
+                            <label for="blood_group" class="form-label">Blood Group</label>
+                            <select name="blood_group" id="blood_group" class="form-select" required>
+                                <option value="">Choose your blood group</option>
+                                {% for bg in blood_groups %}
+                                    <option value="{{ bg }}" {% if form.blood_group.value == bg %}selected{% endif %}>{{ bg }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control" id="email"
+                                   value="{{ form.email.value|default:'' }}" required>
+                        </div>
+
+                        <!-- Phone -->
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="text" name="phone" class="form-control" id="phone"
+                                   value="{{ form.phone.value|default:'' }}" required>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <textarea name="address" id="address" rows="3" class="form-control" required>{{ form.address.value|default:'' }}</textarea>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                Register as Recipient
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

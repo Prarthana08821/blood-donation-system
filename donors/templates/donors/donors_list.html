@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+  body {
+    background: linear-gradient(135deg, #f9f9f9, #e3f2fd);
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .donor-card {
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  .donor-card:hover {
+    transform: scale(1.03);
+  }
+  .donor-badge {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h1 class="text-center mb-4 text-primary">💉 Available Donors</h1>
+
+  {% if donors %}
+    <div class="row g-4">
+      {% for donor in donors %}
+        <div class="col-md-4">
+          <div class="card donor-card p-3">
+            <div class="card-body">
+              <h5 class="card-title text-danger">{{ donor.name }}</h5>
+              <p class="donor-badge badge bg-success">{{ donor.blood_type }}</p>
+              <ul class="list-unstyled mt-3">
+                <li><strong>Age:</strong> {{ donor.age }}</li>
+                <li><strong>Location:</strong> {{ donor.location }}</li>
+                <li><strong>Contact:</strong> 📞 {{ donor.contact }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-warning text-center">
+      😔 No donors found.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

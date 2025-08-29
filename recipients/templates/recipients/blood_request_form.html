@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Create Blood Request{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card p-4 shadow-lg rounded">
+
+                <div class="text-center mb-4">
+                    <h2 class="text-info fw-bold">🩸 Create Blood Request</h2>
+                    <p class="text-muted">Request blood for a recipient</p>
+                </div>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <!-- Recipient -->
+                    <div class="mb-3">
+                        <label for="recipient" class="form-label">Recipient</label>
+                        <select name="recipient" id="recipient" class="form-select" required>
+                            <option value="">Select a recipient</option>
+                            {% for r in recipients %}
+                                <option value="{{ r.id }}">{{ r.name }} ({{ r.blood_group }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Blood Group -->
+                    <div class="mb-3">
+                        <label for="blood_group" class="form-label">Blood Group</label>
+                        <select name="blood_group" id="blood_group" class="form-select" required>
+                            <option value="">Choose blood group</option>
+                            {% for bg in blood_groups %}
+                                <option value="{{ bg }}">{{ bg }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Units -->
+                    <div class="mb-3">
+                        <label for="units_required" class="form-label">Units Required</label>
+                        <input type="number" name="units_required" id="units_required" class="form-control" required>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select name="status" id="status" class="form-select" required>
+                            <option value="Pending">Pending</option>
+                            <option value="Approved">Approved</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-info btn-lg">
+                            <i class="bi bi-plus-circle"></i> Create Request
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

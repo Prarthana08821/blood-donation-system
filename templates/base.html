@@ -1,0 +1,91 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Blood Donation System{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+        }
+        .navbar {
+            background: linear-gradient(90deg, #dc3545, #c82333);
+        }
+        .navbar-brand, .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #ffd6d6 !important;
+        }
+        .footer {
+            background: #212529;
+            color: #aaa;
+            padding: 15px 0;
+            text-align: center;
+            margin-top: 40px;
+        }
+        .dropdown-menu {
+            background: #fff;
+            border: 1px solid #ddd;
+        }
+        .dropdown-item:hover {
+            background: #f8d7da;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">💉 Blood Donation</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="donorsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Donors
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="donorsDropdown">
+                            <li><a class="dropdown-item" href="{% url 'donor_register' %}">Add Donor</a></li>
+                            <li><a class="dropdown-item" href="{% url 'donors_list' %}">See Donor List</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="recipientsDropdown" role="button" data-bs-toggle="dropdown">
+                            Recipients
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="recipientsDropdown">
+                            <li><a class="dropdown-item" href="{% url 'recipient_create' %}">Add Recipient</a></li>
+                            <li><a class="dropdown-item" href="{% url 'recipient_list' %}">See Recipient List</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="{% url 'create_request' %}">Create Request</a></li>
+                            <li><a class="dropdown-item" href="{% url 'blood_request_list' %}">See Request List</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container my-5">
+        {% block content %}{% endblock %}
+    </div>
+
+    <div class="footer">
+        <p>© 2025 Blood Donation System | Save Lives ❤️</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

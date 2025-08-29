@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}{{ recipient.name }} - Details - Blood Donation System{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-danger">Recipient Details</h1>
+    <a href="{% url 'recipient_list' %}" class="btn btn-outline-secondary">
+        ← Back to List
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-header bg-danger text-white">
+        <h5 class="card-title mb-0">{{ recipient.name }}</h5>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <strong class="text-danger">Blood Group:</strong>
+                    <span class="badge bg-danger rounded-pill fs-6">{{ recipient.blood_group }}</span>
+                </div>
+                
+                <div class="mb-3">
+                    <strong class="text-danger">Phone:</strong>
+                    <p class="mb-0">{{ recipient.phone }}</p>
+                </div>
+                
+                <div class="mb-3">
+                    <strong class="text-danger">Email:</strong>
+                    <p class="mb-0">{{ recipient.email }}</p>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                {% if recipient.address %}
+                <div class="mb-3">
+                    <strong class="text-danger">Address:</strong>
+                    <p class="mb-0">{{ recipient.address }}</p>
+                </div>
+                {% endif %}
+                
+                {% if recipient.hospital %}
+                <div class="mb-3">
+                    <strong class="text-danger">Hospital:</strong>
+                    <p class="mb-0">{{ recipient.hospital }}</p>
+                </div>
+                {% endif %}
+                
+                {% if recipient.required_date %}
+                <div class="mb-3">
+                    <strong class="text-danger">Required Date:</strong>
+                    <p class="mb-0">{{ recipient.required_date }}</p>
+                </div>
+                {% endif %}
+                
+                {% if recipient.status %}
+                <div class="mb-3">
+                    <strong class="text-danger">Status:</strong>
+                    <span class="badge {% if recipient.status == 'Urgent' %}bg-danger{% else %}bg-warning{% endif %}">
+                        {{ recipient.status }}
+                    </span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="mt-4 pt-3 border-top">
+            <div class="btn-group">
+                <a href="{% url 'recipient_list' %}" class="btn btn-outline-secondary">
+                    Back to List
+                </a>
+                <a href="{% url 'edit_recipient' recipient.pk %}" class="btn btn-primary">Edit Details</a>
+
+                <form method="post" action="{% url 'delete_recipient' recipient.pk %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this recipient?');">Delete</button>
+    </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

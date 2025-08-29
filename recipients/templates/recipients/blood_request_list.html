@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="text-center mb-4">📋 Blood Requests</h1>
+
+    <div class="row g-4 justify-content-center">
+        {% for request in requests %}
+            <div class="col-md-4">
+                <div class="card p-3 shadow-sm rounded">
+                    <div class="card-body">
+                        <h5 class="card-title text-danger fw-bold">
+                            Request for {{ request.recipient.name }}
+                        </h5>
+                        <ul class="list-unstyled mt-3">
+                            <li><strong>Patient Name:</strong> </li>
+                            <li><strong>Blood Type:</strong> <span class="badge bg-danger"></span></li>
+                            
+                            <li><strong>Units Required:</strong> </li>
+                            <li>
+                                <strong>Status:</strong>
+                                {% if request.status == "Pending" %}
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                {% elif request.status == "Approved" %}
+                                    <span class="badge bg-info text-dark">Approved</span>
+                                {% else %}
+                                    <span class="badge bg-success">Completed</span>
+                                {% endif %}
+                            </li>
+                        </ul>
+
+                        <div class="d-flex justify-content-between mt-3">
+                            <a href="{% url 'request_detail' request.pk %}" class="btn btn-sm btn-outline-primary">View</a>
+                            <a href="{% url 'delete_request' request.pk %}" 
+                               class="btn btn-sm btn-outline-danger"
+                               onclick="return confirm('Are you sure you want to delete this request?');">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="alert alert-info text-center">
+                <p>No active blood requests found.</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
