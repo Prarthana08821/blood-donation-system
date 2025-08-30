@@ -109,5 +109,5 @@ AUTH_USER_MODEL = "users.CustomUser"
 
 # Render Deployment settings
 if 'RENDER' in os.environ:
-    DEBUG = True
+    DEBUG = False
     ALLOWED_HOSTS = ['blood-donation-system-1-dl3d.onrender.com']
