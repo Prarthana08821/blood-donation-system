@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-s&*!+jp%gmixt!_zk=7v)&35mekpc*i%5wk$9f7smg3@^n*(fi
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["your-app-name.onrender.com"]
+ALLOWED_HOSTS = ["blood_donation_system.onrender.com"]
 
 
 
